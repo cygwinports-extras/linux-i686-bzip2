@@ -1,0 +1,28 @@
+CROSS_HOST="i686-pc-linux-gnu"
+inherit cross
+
+NAME="linux-i686-bzip2"
+VERSION=1.0.6
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="libbz2 for Linux i686 toolchain"
+DESCRIPTION="This package does NOT contain cygwin binaries.
+Instead, it contains Linux ELF binaries.  It is for use with the
+linux-i686-gcc cross compiler, and installs into the
+/usr/i686-pc-linux-gnu/sys-root/usr/{lib,include} directories."
+HOMEPAGE="http://www.bzip.org/"
+SRC_URI="http://www.bzip.org/${VERSION}/bzip2-${VERSION}.tar.gz"
+SRC_DIR="bzip2-${VERSION}"
+
+src_compile() {
+	lndirs
+	cd ${B}
+	cygmake -f Makefile-libbz2_so clean
+	cygmake -f Makefile-libbz2_so CC=${CC} AR=${CROSS_HOST}-ar RANLIB=${CROSS_HOST}-ranlib
+}
+
+src_install() {
+	cd ${B}
+	doelflib libbz2.so.${VERSION}
+	doinclude bzlib.h
+}
